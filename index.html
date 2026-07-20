@@ -3809,143 +3809,16 @@
         // ─── DESCARGA DE PDF (Guía de contención emocional) ───
         window.downloadRecursoPDF = function() {
             const btn = document.getElementById('btnDescargaRecurso');
+            const FILENAME_PDF = 'Recurso-de-Contencion-Emocional-EstamosSanando.pdf';
+            const FILENAME_IMG = 'Recurso-de-Contencion-Emocional-EstamosSanando.jpg';
+            const IMG_SRC = 'assets/recurso-contencion.jpg';
+
             if (btn) {
                 btn.classList.add('loading');
-                btn.textContent = 'Generando PDF...';
+                btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Preparando...';
             }
 
-            try {
-                // Si jsPDF está disponible, generar PDF
-                if (window.jspdf && window.jspdf.jsPDF) {
-                    const { jsPDF } = window.jspdf;
-                    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-
-                    const primary = [166, 94, 147];
-                    const dark = [43, 43, 43];
-                    const light = [107, 107, 107];
-
-                    // Fondo suave
-                    doc.setFillColor(250, 243, 235);
-                    doc.rect(0, 0, 210, 297, 'F');
-
-                    // Barra superior
-                    doc.setFillColor(...primary);
-                    doc.rect(0, 0, 210, 12, 'F');
-
-                    // Título
-                    doc.setFont('times', 'bold');
-                    doc.setFontSize(24);
-                    doc.setTextColor(...primary);
-                    doc.text('Estamos Sanando', 105, 28, { align: 'center' });
-
-                    doc.setFont('times', 'italic');
-                    doc.setFontSize(13);
-                    doc.setTextColor(...light);
-                    doc.text('Guía de Contención Emocional', 105, 37, { align: 'center' });
-
-                    // Línea divisora
-                    doc.setDrawColor(...primary);
-                    doc.setLineWidth(0.5);
-                    doc.line(20, 42, 190, 42);
-
-                    const sections = [
-                        {
-                            title: '1. Respirá antes de reaccionar',
-                            body: 'Cuando algo te desborda, pausá. Inhalá por 4 segundos, retené 4, exhalá 6. Repetí 3 veces.\nEsta pausa no es debilidad — es sabiduría. Tu sistema nervioso necesita ese espacio para poder estar realmente presente.'
-                        },
-                        {
-                            title: '2. Nombrá lo que sentís',
-                            body: 'Poné en palabras la emoción: «Siento miedo», «Siento tristeza», «Siento agotamiento».\nNombrar no es quejarse — es el primer paso para procesar. Las emociones sin nombre tienden a acumularse en el cuerpo.'
-                        },
-                        {
-                            title: '3. No tenés que tener todo resuelto',
-                            body: 'Acompañar es estar presente, no tener respuestas perfectas. No se trata de decir lo correcto, sino de estar.\nTu presencia tranquila ya es un sostén enorme para quien necesita apoyo.'
-                        },
-                        {
-                            title: '4. Cuidarte no es egoísmo',
-                            body: 'Solo podés dar desde lo que tenés. Si estás vacía/o, dar se vuelve agotador y termina lastimando a los dos.\nBuscá un momento hoy para vos: una taza de té, silencio, un llamado a alguien que te cuide.'
-                        },
-                        {
-                            title: '5. Pedí ayuda cuando lo necesités',
-                            body: 'No hay medalla por aguantar solo/a. Compartir el peso no lo hace más liviano — lo hace sostenible.\nHablá con alguien de confianza, buscá un profesional, escribí lo que sentís. Las palabras sanan.'
-                        },
-                        {
-                            title: '6. Recordá tu propósito',
-                            body: '¿Por qué estás acompañando a esta persona? Ese amor, esa elección, ese compromiso — eso es lo que te sostiene.\nCuando el camino se pone difícil, volvé a ese porqué.'
-                        }
-                    ];
-
-                    let y = 52;
-                    sections.forEach(function(section) {
-                        if (y > 260) { doc.addPage(); y = 20; }
-
-                        doc.setFont('times', 'bold');
-                        doc.setFontSize(12);
-                        doc.setTextColor(...primary);
-                        doc.text(section.title, 20, y);
-                        y += 6;
-
-                        doc.setFont('helvetica', 'normal');
-                        doc.setFontSize(10);
-                        doc.setTextColor(...dark);
-                        const lines = doc.splitTextToSize(section.body, 170);
-                        doc.text(lines, 20, y);
-                        y += lines.length * 5 + 8;
-                    });
-
-                    // Pie de página
-                    doc.setFillColor(...primary);
-                    doc.rect(0, 285, 210, 12, 'F');
-                    doc.setFont('helvetica', 'normal');
-                    doc.setFontSize(9);
-                    doc.setTextColor(255, 255, 255);
-                    doc.text('estamossanando.vercel.app  |  No se trata de tener todo resuelto, sino de elegir cómo transitarlo. ♡', 105, 292, { align: 'center' });
-
-                    doc.save('Guia-de-Contencion-Emocional-Estamos-Sanando.pdf');
-
-                } else {
-                    // Fallback: crear un Blob de texto plano
-                    const content = [
-                        'ESTAMOS SANANDO',
-                        'Guía de Contención Emocional',
-                        '================================',
-                        '',
-                        '1. Respirá antes de reaccionar',
-                        'Cuando algo te desborda, pausá. Inhalá por 4 segundos, retené 4, exhalá 6. Repetí 3 veces.',
-                        '',
-                        '2. Nombrá lo que sentís',
-                        'Poné en palabras la emoción. Nombrar no es quejarse — es el primer paso para procesar.',
-                        '',
-                        '3. No tenés que tener todo resuelto',
-                        'Acompañar es estar presente, no tener respuestas perfectas.',
-                        '',
-                        '4. Cuidarte no es egoísmo',
-                        'Solo podés dar desde lo que tenés. Buscá un momento hoy para vos.',
-                        '',
-                        '5. Pedí ayuda cuando lo necesités',
-                        'No hay medalla por aguantar solo/a. Compartir el peso lo hace sostenible.',
-                        '',
-                        '6. Recordá tu propósito',
-                        '¿Por qué estás acompañando a esta persona? Ese amor te sostiene.',
-                        '',
-                        '================================',
-                        'estamossanando.vercel.app'
-                    ].join('\n');
-
-                    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = 'Guia-de-Contencion-Emocional-Estamos-Sanando.txt';
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    URL.revokeObjectURL(url);
-                }
-            } catch (e) {
-                console.error('Error generando PDF:', e);
-                alert('Hubo un problema al generar el PDF. Por favor intentá de nuevo.');
-            } finally {
+            function restoreBtn() {
                 setTimeout(function() {
                     if (btn) {
                         btn.classList.remove('loading');
@@ -3953,6 +3826,105 @@
                     }
                 }, 1500);
             }
+
+            // Fallback: descargar la imagen directamente via Blob
+            function downloadAsImage() {
+                fetch(IMG_SRC)
+                    .then(function(r) { return r.blob(); })
+                    .then(function(blob) {
+                        var url = URL.createObjectURL(blob);
+                        var a = document.createElement('a');
+                        a.href = url;
+                        a.download = FILENAME_IMG;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        setTimeout(function() { URL.revokeObjectURL(url); }, 2000);
+                        restoreBtn();
+                    })
+                    .catch(function() {
+                        // Último recurso: abrir en nueva pestaña
+                        window.open(IMG_SRC, '_blank');
+                        restoreBtn();
+                    });
+            }
+
+            // Intentar generar PDF con jsPDF incrustando la imagen real
+            var img = new Image();
+            img.crossOrigin = 'anonymous';
+
+            img.onload = function() {
+                try {
+                    if (window.jspdf && window.jspdf.jsPDF) {
+                        var jsPDF = window.jspdf.jsPDF;
+                        var imgW = img.naturalWidth;
+                        var imgH = img.naturalHeight;
+                        var isPortrait = imgH >= imgW;
+
+                        var doc = new jsPDF({
+                            orientation: isPortrait ? 'portrait' : 'landscape',
+                            unit: 'mm',
+                            format: 'a4'
+                        });
+
+                        var pageW = isPortrait ? 210 : 297;
+                        var pageH = isPortrait ? 297 : 210;
+
+                        // Barra de marca superior
+                        doc.setFillColor(166, 94, 147);
+                        doc.rect(0, 0, pageW, 10, 'F');
+                        doc.setFont('helvetica', 'bold');
+                        doc.setFontSize(8);
+                        doc.setTextColor(255, 255, 255);
+                        doc.text('ESTAMOS SANANDO  |  estamossanando.vercel.app', pageW / 2, 6.5, { align: 'center' });
+
+                        // Calcular posición y tamaño de imagen
+                        var margin = 10;
+                        var availW = pageW - margin * 2;
+                        var availH = pageH - 20;
+                        var ratio = Math.min(availW / imgW, availH / imgH);
+                        var drawW = imgW * ratio;
+                        var drawH = imgH * ratio;
+                        var offsetX = margin + (availW - drawW) / 2;
+                        var offsetY = 12;
+
+                        // Convertir imagen a dataURL via canvas
+                        var canvas = document.createElement('canvas');
+                        canvas.width = imgW;
+                        canvas.height = imgH;
+                        var ctx = canvas.getContext('2d');
+                        ctx.fillStyle = '#FFFFFF';
+                        ctx.fillRect(0, 0, imgW, imgH);
+                        ctx.drawImage(img, 0, 0);
+                        var dataUrl = canvas.toDataURL('image/jpeg', 0.93);
+
+                        doc.addImage(dataUrl, 'JPEG', offsetX, offsetY, drawW, drawH);
+
+                        // Pie de página
+                        doc.setFillColor(166, 94, 147);
+                        doc.rect(0, pageH - 8, pageW, 8, 'F');
+                        doc.setFont('helvetica', 'normal');
+                        doc.setFontSize(7);
+                        doc.setTextColor(255, 255, 255);
+                        doc.text('No se trata de tener todo resuelto, sino de elegir como transitarlo.  ♡', pageW / 2, pageH - 3, { align: 'center' });
+
+                        doc.save(FILENAME_PDF);
+                        restoreBtn();
+                    } else {
+                        downloadAsImage();
+                    }
+                } catch (e) {
+                    console.warn('jsPDF error:', e);
+                    downloadAsImage();
+                }
+            };
+
+            img.onerror = function() {
+                // Imagen no cargó (quizás CORS local) → bajar directo
+                downloadAsImage();
+            };
+
+            img.src = IMG_SRC + '?t=' + Date.now();
         };
 
         // ─── VALIDACIÓN PARA PENDRIVE ───
