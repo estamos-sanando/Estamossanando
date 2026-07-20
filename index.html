@@ -2049,8 +2049,21 @@
            RESPONSIVE
            ═════════════════════════════════════════════════ */
         @media (max-width: 900px) {
-            .nav-links,
+            .nav-links {
+                display: none;
+            }
+
+            /* En móvil: solo mostrar los botones de tema/flores, ocultar redes sociales */
             .nav-social {
+                display: flex;
+                gap: 8px;
+            }
+
+            .nav-social > a {
+                display: none;
+            }
+
+            .nav-social > div {
                 display: none;
             }
 
@@ -2087,6 +2100,16 @@
                 grid-template-columns: 1fr;
                 gap: 2rem;
                 text-align: center;
+            }
+
+            .footer-brand {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .footer-brand .logo-image {
+                margin: 0 auto;
             }
 
             .footer-bottom {
@@ -3783,6 +3806,155 @@
         // (floating player removed with old podcast player)
 
 
+        // ─── DESCARGA DE PDF (Guía de contención emocional) ───
+        window.downloadRecursoPDF = function() {
+            const btn = document.getElementById('btnDescargaRecurso');
+            if (btn) {
+                btn.classList.add('loading');
+                btn.textContent = 'Generando PDF...';
+            }
+
+            try {
+                // Si jsPDF está disponible, generar PDF
+                if (window.jspdf && window.jspdf.jsPDF) {
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+
+                    const primary = [166, 94, 147];
+                    const dark = [43, 43, 43];
+                    const light = [107, 107, 107];
+
+                    // Fondo suave
+                    doc.setFillColor(250, 243, 235);
+                    doc.rect(0, 0, 210, 297, 'F');
+
+                    // Barra superior
+                    doc.setFillColor(...primary);
+                    doc.rect(0, 0, 210, 12, 'F');
+
+                    // Título
+                    doc.setFont('times', 'bold');
+                    doc.setFontSize(24);
+                    doc.setTextColor(...primary);
+                    doc.text('Estamos Sanando', 105, 28, { align: 'center' });
+
+                    doc.setFont('times', 'italic');
+                    doc.setFontSize(13);
+                    doc.setTextColor(...light);
+                    doc.text('Guía de Contención Emocional', 105, 37, { align: 'center' });
+
+                    // Línea divisora
+                    doc.setDrawColor(...primary);
+                    doc.setLineWidth(0.5);
+                    doc.line(20, 42, 190, 42);
+
+                    const sections = [
+                        {
+                            title: '1. Respirá antes de reaccionar',
+                            body: 'Cuando algo te desborda, pausá. Inhalá por 4 segundos, retené 4, exhalá 6. Repetí 3 veces.\nEsta pausa no es debilidad — es sabiduría. Tu sistema nervioso necesita ese espacio para poder estar realmente presente.'
+                        },
+                        {
+                            title: '2. Nombrá lo que sentís',
+                            body: 'Poné en palabras la emoción: «Siento miedo», «Siento tristeza», «Siento agotamiento».\nNombrar no es quejarse — es el primer paso para procesar. Las emociones sin nombre tienden a acumularse en el cuerpo.'
+                        },
+                        {
+                            title: '3. No tenés que tener todo resuelto',
+                            body: 'Acompañar es estar presente, no tener respuestas perfectas. No se trata de decir lo correcto, sino de estar.\nTu presencia tranquila ya es un sostén enorme para quien necesita apoyo.'
+                        },
+                        {
+                            title: '4. Cuidarte no es egoísmo',
+                            body: 'Solo podés dar desde lo que tenés. Si estás vacía/o, dar se vuelve agotador y termina lastimando a los dos.\nBuscá un momento hoy para vos: una taza de té, silencio, un llamado a alguien que te cuide.'
+                        },
+                        {
+                            title: '5. Pedí ayuda cuando lo necesités',
+                            body: 'No hay medalla por aguantar solo/a. Compartir el peso no lo hace más liviano — lo hace sostenible.\nHablá con alguien de confianza, buscá un profesional, escribí lo que sentís. Las palabras sanan.'
+                        },
+                        {
+                            title: '6. Recordá tu propósito',
+                            body: '¿Por qué estás acompañando a esta persona? Ese amor, esa elección, ese compromiso — eso es lo que te sostiene.\nCuando el camino se pone difícil, volvé a ese porqué.'
+                        }
+                    ];
+
+                    let y = 52;
+                    sections.forEach(function(section) {
+                        if (y > 260) { doc.addPage(); y = 20; }
+
+                        doc.setFont('times', 'bold');
+                        doc.setFontSize(12);
+                        doc.setTextColor(...primary);
+                        doc.text(section.title, 20, y);
+                        y += 6;
+
+                        doc.setFont('helvetica', 'normal');
+                        doc.setFontSize(10);
+                        doc.setTextColor(...dark);
+                        const lines = doc.splitTextToSize(section.body, 170);
+                        doc.text(lines, 20, y);
+                        y += lines.length * 5 + 8;
+                    });
+
+                    // Pie de página
+                    doc.setFillColor(...primary);
+                    doc.rect(0, 285, 210, 12, 'F');
+                    doc.setFont('helvetica', 'normal');
+                    doc.setFontSize(9);
+                    doc.setTextColor(255, 255, 255);
+                    doc.text('estamossanando.vercel.app  |  No se trata de tener todo resuelto, sino de elegir cómo transitarlo. ♡', 105, 292, { align: 'center' });
+
+                    doc.save('Guia-de-Contencion-Emocional-Estamos-Sanando.pdf');
+
+                } else {
+                    // Fallback: crear un Blob de texto plano
+                    const content = [
+                        'ESTAMOS SANANDO',
+                        'Guía de Contención Emocional',
+                        '================================',
+                        '',
+                        '1. Respirá antes de reaccionar',
+                        'Cuando algo te desborda, pausá. Inhalá por 4 segundos, retené 4, exhalá 6. Repetí 3 veces.',
+                        '',
+                        '2. Nombrá lo que sentís',
+                        'Poné en palabras la emoción. Nombrar no es quejarse — es el primer paso para procesar.',
+                        '',
+                        '3. No tenés que tener todo resuelto',
+                        'Acompañar es estar presente, no tener respuestas perfectas.',
+                        '',
+                        '4. Cuidarte no es egoísmo',
+                        'Solo podés dar desde lo que tenés. Buscá un momento hoy para vos.',
+                        '',
+                        '5. Pedí ayuda cuando lo necesités',
+                        'No hay medalla por aguantar solo/a. Compartir el peso lo hace sostenible.',
+                        '',
+                        '6. Recordá tu propósito',
+                        '¿Por qué estás acompañando a esta persona? Ese amor te sostiene.',
+                        '',
+                        '================================',
+                        'estamossanando.vercel.app'
+                    ].join('\n');
+
+                    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'Guia-de-Contencion-Emocional-Estamos-Sanando.txt';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                }
+            } catch (e) {
+                console.error('Error generando PDF:', e);
+                alert('Hubo un problema al generar el PDF. Por favor intentá de nuevo.');
+            } finally {
+                setTimeout(function() {
+                    if (btn) {
+                        btn.classList.remove('loading');
+                        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Descargar PDF';
+                    }
+                }, 1500);
+            }
+        };
+
         // ─── VALIDACIÓN PARA PENDRIVE ───
         function handleAssetError(img) {
             console.error("No se pudo cargar la imagen:", img.src);
@@ -3969,6 +4141,24 @@
             // ── Streaming request ───────────────────────────────
             async function sendMessage(text) {
                 const content = (text || '').trim();
+                if (!content || isStreaming) return;
+
+                // Hide quick replies after first message
+                quick.classList.add('is-hidden');
+
+                appendMessage('user', content);
+                history.push({ role: 'user', content });
+                localStorage.setItem('es_chatHistory', JSON.stringify(history));
+
+                input.value = '';
+                input.style.height = 'auto';
+                setLocked(true);
+
+                const typingEl = showTyping();
+
+                // Crisis detection
+                if (checkCrisis(content)) {
+                    setTimeout(() => {
                         typingEl.remove();
                         appendMessage('ai', CRISIS_RESPONSE);
                         history.push({ role: 'assistant', content: CRISIS_RESPONSE });
@@ -3976,7 +4166,7 @@
                         setLocked(false);
                         input.focus();
                         scrollToBottom();
-                    }, 1800); // Simulamos tiempo de escritura
+                    }, 1800);
                     return;
                 }
 
