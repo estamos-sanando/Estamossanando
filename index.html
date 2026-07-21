@@ -272,6 +272,181 @@
         }
 
         /* ══════════════════════════════════════════════════
+           MODAL DE VISTA PREVIA — Recurso de Contención
+           ══════════════════════════════════════════════════ */
+        .recurso-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(20, 10, 20, 0.72);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            z-index: 3000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.35s ease, visibility 0.35s ease;
+        }
+        .recurso-modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .recurso-modal {
+            background: var(--bg-light);
+            border-radius: 22px;
+            width: min(680px, 100%);
+            max-height: min(90vh, 860px);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 24px 70px rgba(0,0,0,0.35);
+            transform: scale(0.92) translateY(24px);
+            transition: transform 0.38s cubic-bezier(0.34, 1.56, 0.64, 1);
+            overflow: hidden;
+            position: relative;
+        }
+        .recurso-modal-overlay.active .recurso-modal {
+            transform: scale(1) translateY(0);
+        }
+        /* barra de color superior */
+        .recurso-modal::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--complementary));
+            z-index: 1;
+        }
+        .recurso-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.25rem 1.5rem 1rem;
+            gap: 1rem;
+            border-bottom: 1px solid rgba(166,94,147,0.12);
+            flex-shrink: 0;
+        }
+        .recurso-modal-title-group {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .recurso-modal-label {
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--primary);
+        }
+        .recurso-modal-title {
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-main);
+            line-height: 1.3;
+        }
+        .recurso-modal-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+        .btn-recurso-modal-dl {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 9px 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-family: var(--font-sans);
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+        .btn-recurso-modal-dl:hover {
+            background: #8E4D7D;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(166,94,147,0.3);
+        }
+        .btn-recurso-modal-dl svg { width: 14px; height: 14px; }
+        .btn-recurso-modal-dl.loading { opacity: 0.75; pointer-events: none; }
+        .recurso-modal-close {
+            width: 34px;
+            height: 34px;
+            border: none;
+            background: rgba(166,94,147,0.08);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
+        .recurso-modal-close:hover {
+            background: rgba(166,94,147,0.18);
+            color: var(--primary);
+            transform: rotate(90deg);
+        }
+        .recurso-modal-close svg { width: 16px; height: 16px; }
+        .recurso-modal-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.25rem 1.5rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+        .recurso-modal-body::-webkit-scrollbar { width: 6px; }
+        .recurso-modal-body::-webkit-scrollbar-thumb {
+            background: rgba(166,94,147,0.25);
+            border-radius: 4px;
+        }
+        .recurso-modal-img {
+            width: 100%;
+            max-width: 580px;
+            border-radius: 14px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.14);
+            display: block;
+            object-fit: contain;
+        }
+        .recurso-modal-img-error {
+            display: none;
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+        .recurso-modal-img-error svg {
+            width: 48px;
+            height: 48px;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+        .recurso-modal-footer-note {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            text-align: center;
+            font-style: italic;
+        }
+        @media (max-width: 600px) {
+            .recurso-modal-header {
+                flex-wrap: wrap;
+                gap: 0.75rem;
+            }
+            .recurso-modal-actions { width: 100%; justify-content: space-between; }
+            .btn-recurso-modal-dl { flex: 1; justify-content: center; }
+        }
+
+        /* ══════════════════════════════════════════════════
            DECORATIVE FLOWER ELEMENTS (SVG)
            ══════════════════════════════════════════════════ */
         .deco-flower {
@@ -3353,15 +3528,52 @@
                             <p class="recurso-card-title">Guía de contención emocional</p>
                             <p class="recurso-card-desc">Un recurso para los momentos difíciles. Descargalo y tenelo cerca.</p>
                         </div>
-                        <button class="btn-recurso-dl" id="btnDescargaRecurso" onclick="downloadRecursoPDF()">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                            Descargar PDF
+                        <button class="btn-recurso-dl" id="btnDescargaRecurso" onclick="openRecursoModal()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                            Ver recurso
                         </button>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- ══════════════════════════════════════════════════
+         MODAL — RECURSO DE CONTENCIÓN EMOCIONAL
+         ══════════════════════════════════════════════════ -->
+    <div class="recurso-modal-overlay" id="recursoModalOverlay" role="dialog" aria-modal="true" aria-labelledby="recursoModalTitle">
+        <div class="recurso-modal" id="recursoModal">
+            <div class="recurso-modal-header">
+                <div class="recurso-modal-title-group">
+                    <span class="recurso-modal-label">Recurso gratuito</span>
+                    <span class="recurso-modal-title" id="recursoModalTitle">Guía de contención emocional</span>
+                </div>
+                <div class="recurso-modal-actions">
+                    <button class="btn-recurso-modal-dl" id="btnDescargaRecursoModal" onclick="downloadRecursoPDF()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Descargar PDF
+                    </button>
+                    <button class="recurso-modal-close" id="btnCloseRecursoModal" aria-label="Cerrar">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="recurso-modal-body">
+                <img
+                    src="assets/recurso-contencion.jpg"
+                    alt="Guía de contención emocional — Estamos Sanando"
+                    class="recurso-modal-img"
+                    id="recursoModalImg"
+                    onerror="document.getElementById('recursoImgError').style.display='flex'; this.style.display='none';"
+                />
+                <div class="recurso-modal-img-error" id="recursoImgError" style="display:none; flex-direction:column; align-items:center;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    <p>No se pudo cargar la imagen del recurso.<br>Asegurate de tener la carpeta <strong>"assets"</strong> junto al archivo.</p>
+                </div>
+                <p class="recurso-modal-footer-note">Un recurso para los momentos difíciles. Guardalo y tenelo cerca. 🤍</p>
+            </div>
+        </div>
+    </div>
 
 
 
@@ -3699,6 +3911,7 @@
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 hideDaisyPopup();
+                closeRecursoModal();
                 if (mobileMenu.classList.contains('active')) {
                     hamburger.classList.remove('active');
                     mobileMenu.classList.remove('active');
@@ -3806,23 +4019,49 @@
         // (floating player removed with old podcast player)
 
 
+        // ─── MODAL DE VISTA PREVIA — Recurso de contención ───
+        window.openRecursoModal = function() {
+            const overlay = document.getElementById('recursoModalOverlay');
+            if (overlay) {
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        };
+
+        window.closeRecursoModal = function() {
+            const overlay = document.getElementById('recursoModalOverlay');
+            if (overlay) {
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        };
+
+        // Cerrar al hacer click fuera del modal
+        document.getElementById('recursoModalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) closeRecursoModal();
+        });
+
+        document.getElementById('btnCloseRecursoModal').addEventListener('click', closeRecursoModal);
+
         // ─── DESCARGA DE PDF (Guía de contención emocional) ───
         window.downloadRecursoPDF = function() {
-            const btn = document.getElementById('btnDescargaRecurso');
+            const btnModal = document.getElementById('btnDescargaRecursoModal');
             const FILENAME_PDF = 'Recurso-de-Contencion-Emocional-EstamosSanando.pdf';
             const FILENAME_IMG = 'Recurso-de-Contencion-Emocional-EstamosSanando.jpg';
             const IMG_SRC = 'assets/recurso-contencion.jpg';
 
-            if (btn) {
-                btn.classList.add('loading');
-                btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Preparando...';
+            const dlBtnSVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>';
+
+            if (btnModal) {
+                btnModal.classList.add('loading');
+                btnModal.innerHTML = dlBtnSVG + ' Preparando...';
             }
 
             function restoreBtn() {
                 setTimeout(function() {
-                    if (btn) {
-                        btn.classList.remove('loading');
-                        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Descargar PDF';
+                    if (btnModal) {
+                        btnModal.classList.remove('loading');
+                        btnModal.innerHTML = dlBtnSVG + ' Descargar PDF';
                     }
                 }, 1500);
             }
