@@ -4115,7 +4115,7 @@
                         doc.setFont('helvetica', 'bold');
                         doc.setFontSize(8);
                         doc.setTextColor(255, 255, 255);
-                        doc.text('ESTAMOS SANANDO  |  estamossanando.vercel.app', pageW / 2, 6.5, { align: 'center' });
+                        doc.text('ESTAMOS SANANDO  |  github.com/estamos-sanando/estamossanando', pageW / 2, 6.5, { align: 'center' });
 
                         // Calcular posición y tamaño de imagen
                         var margin = 10;
@@ -4233,11 +4233,9 @@
 
     <script>
         // ══════════════════════════════════════════════════
-        // "Espacio Seguro" chatbot — streaming via Netlify AI Gateway
+        // "Espacio Seguro" chatbot — modo local (sin servidor externo)
         // ══════════════════════════════════════════════════
         (function () {
-            const ENDPOINT = '/.netlify/functions/ai';
-
             const INITIAL_MESSAGE =
                 'Hola. Este es un espacio para cuando no sabés qué decir, ' +
                 'pero necesitás decir algo igual. Podés escribir lo que quieras.';
@@ -4349,7 +4347,22 @@
                 input.style.height = Math.min(input.scrollHeight, 110) + 'px';
             }
 
-            // ── Streaming request ───────────────────────────────
+            // ── Respuesta local empática ─────────────────────────
+            const RESPUESTAS_LOCALES = [
+                "Te escucho. Lo que estás transitando es muy difícil, y tiene sentido que te sientas así. Estoy acá.",
+                "Gracias por compartirlo. No tenés que tener todo claro para poder hablar de lo que sentís.",
+                "Lo que describís es algo que muchas personas que acompañan sienten y pocas veces dicen. No estás sol@.",
+                "Es válido sentirse desbordad@. Acompañar a alguien que amamos en el dolor es uno de los actos más exigentes que existen.",
+                "Quédate acá el tiempo que necesites. No hay apuro. Este espacio es tuyo.",
+                "A veces no hay palabras que alcancen. Pero el solo hecho de ponerlo en palabras ya es un paso.",
+                "Lo que sentís importa. Tu bienestar también forma parte de este proceso de acompañamiento.",
+                "Sostener a otros desde el agotamiento también es un acto de amor. Pero recordá que vos también necesitás ser sostenid@.",
+                "Respirá. Acá no hay juicio, solo escucha. Seguí contándome si querés.",
+                "Elegir nombrar lo que duele ya es un gesto de valentía. Gracias por confiar en este espacio."
+            ];
+            let respuestaIdx = 0;
+
+            // ── Streaming request (modo local) ──────────────────
             async function sendMessage(text) {
                 const content = (text || '').trim();
                 if (!content || isStreaming) return;
@@ -4381,97 +4394,33 @@
                     return;
                 }
 
-                // Placeholder bubble for the streamed assistant reply.
-                let aiEl = null;
+                // Respuesta local con efecto de escritura
+                const respuesta = RESPUESTAS_LOCALES[respuestaIdx % RESPUESTAS_LOCALES.length];
+                respuestaIdx++;
                 let aiBuffer = '';
 
-                try {
-                    const response = await fetch(ENDPOINT, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            message: content,
-                            // Send the prior turns (excluding the one we just pushed).
-                            history: history.slice(0, -1),
-                        }),
-                    });
-
-                    if (!response.ok || !response.body) {
-                        throw new Error('HTTP ' + response.status);
-                    }
-
-                    const reader = response.body.getReader();
-                    const decoder = new TextDecoder();
-                    let firstChunk = true;
-
-                    while (true) {
-                        const { value, done } = await reader.read();
-                        if (done) break;
-                        const chunk = decoder.decode(value, { stream: true });
-                        if (!chunk) continue;
-
-                        if (firstChunk) {
-                            // Replace the typing indicator with the live AI bubble
-                            // as soon as the first token arrives.
-                            typingEl.remove();
-                            aiEl = appendMessage('ai', '');
-                            firstChunk = false;
-                        }
-
-                        aiBuffer += chunk;
-                        aiEl.textContent = aiBuffer;
-                        scrollToBottom();
-                    }
-
-                    // Flush any pending bytes the decoder is holding.
-                    const tail = decoder.decode();
-                    if (tail) {
-                        if (!aiEl) {
-                            typingEl.remove();
-                            aiEl = appendMessage('ai', '');
-                        }
-                        aiBuffer += tail;
-                        aiEl.textContent = aiBuffer;
-                        scrollToBottom();
-                    }
-
-                    if (!aiEl) {
-                        // Stream ended with no content.
+                await new Promise(resolve => {
+                    setTimeout(() => {
                         typingEl.remove();
-                        throw new Error('empty stream');
-                    }
-
-                    history.push({ role: 'assistant', content: aiBuffer });
-                    localStorage.setItem('es_chatHistory', JSON.stringify(history));
-                } catch (err) {
-                    console.warn('[EspacioSeguro] stream error, using fallback:', err);
-                    if (typingEl && typingEl.parentNode) typingEl.remove();
-                    if (aiEl && !aiBuffer) aiEl.remove();
-                    
-                    // Fallback local streaming
-                    aiEl = appendMessage('ai', '');
-                    const fallbackText = "Parece que no hay conexión técnica en este instante, pero te sigo leyendo y estoy acá. Tomate tu tiempo, respirá, y si querés, podés seguir contándome un poco más cuando estés list@.";
-                    let index = 0;
-                    
-                    await new Promise(resolve => {
+                        const aiEl = appendMessage('ai', '');
+                        let index = 0;
                         const interval = setInterval(() => {
-                            aiBuffer += fallbackText.charAt(index);
+                            aiBuffer += respuesta.charAt(index);
                             aiEl.textContent = aiBuffer;
                             scrollToBottom();
                             index++;
-                            if (index >= fallbackText.length) {
+                            if (index >= respuesta.length) {
                                 clearInterval(interval);
                                 resolve();
                             }
-                        }, 30);
-                    });
-                    
-                    history.push({ role: 'assistant', content: aiBuffer });
-                    localStorage.setItem('es_chatHistory', JSON.stringify(history));
-                } finally {
-                    setLocked(false);
-                    input.focus();
-                }
+                        }, 22);
+                    }, 900 + Math.random() * 600);
+                });
+
+                history.push({ role: 'assistant', content: aiBuffer });
+                localStorage.setItem('es_chatHistory', JSON.stringify(history));
+                setLocked(false);
+                input.focus();
             }
 
             // ── Event wiring ────────────────────────────────────
