@@ -119,6 +119,21 @@
         [data-theme="calm"] .footer {
             background: rgba(142, 77, 125, 0.95);
         }
+
+        [data-theme="calm"] .daily-reflection {
+            background: rgba(35, 28, 36, 0.94);
+            border-color: rgba(194, 122, 176, 0.35);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        [data-theme="calm"] .daily-reflection .reflection-label {
+            color: #E6A5D5;
+        }
+
+        [data-theme="calm"] .daily-reflection .reflection-text {
+            color: #FFFFFF;
+            font-weight: 500;
+        }
         *, *::before, *::after {
             margin: 0;
             padding: 0;
@@ -2884,28 +2899,30 @@
 
         /* ─── NUEVAS SECCIONES COMUNIDAD ─── */
         .daily-reflection {
-            background: rgba(255, 255, 255, 0.7);
-            border: 1px solid rgba(166, 94, 147, 0.2);
-            border-radius: 16px;
-            padding: 1.5rem 2rem;
+            background: rgba(255, 255, 255, 0.92);
+            border: 1.5px solid rgba(166, 94, 147, 0.25);
+            border-radius: 18px;
+            padding: 1.4rem 2rem;
             max-width: 600px;
             margin: 2rem auto 0;
-            backdrop-filter: blur(8px);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             text-align: center;
-            box-shadow: var(--shadow-card);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.06);
         }
         .daily-reflection .reflection-label {
             font-family: var(--font-serif);
             font-style: italic;
-            color: var(--primary);
+            color: #8E4D7D;
             font-size: 1.1rem;
             margin-bottom: 0.5rem;
             display: block;
         }
         .daily-reflection .reflection-text {
             font-size: 1.05rem;
-            color: var(--text-main);
+            color: #241A23;
             font-weight: 500;
+            line-height: 1.6;
         }
 
         .testimonials-slider-wrap {
