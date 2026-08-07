@@ -447,7 +447,238 @@
                 gap: 0.75rem;
             }
             .recurso-modal-actions { width: 100%; justify-content: space-between; }
-            .btn-recurso-modal-dl { flex: 1; justify-content: center; }
+        }
+
+        /* ══════════════════════════════════════════════════
+           MODAL SELECCIÓN DE EMAIL (GMAIL, HOTMAIL/OUTLOOK)
+           ══════════════════════════════════════════════════ */
+        .email-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(20, 10, 20, 0.72);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            z-index: 3000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.25rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .email-modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .email-modal {
+            background: var(--bg-light);
+            border-radius: 20px;
+            width: min(480px, 100%);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            transform: scale(0.92) translateY(20px);
+            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            overflow: hidden;
+            position: relative;
+        }
+
+        [data-theme="calm"] .email-modal {
+            background: #282129;
+            color: var(--text-main);
+        }
+
+        .email-modal-overlay.active .email-modal {
+            transform: scale(1) translateY(0);
+        }
+
+        .email-modal::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #EA4335, #0078D4, var(--primary));
+        }
+
+        .email-modal-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            padding: 1.25rem 1.5rem 1rem;
+            border-bottom: 1px solid rgba(166,94,147,0.12);
+        }
+
+        [data-theme="calm"] .email-modal-header {
+            border-bottom-color: rgba(255,255,255,0.1);
+        }
+
+        .email-modal-label {
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--primary);
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .email-modal-title {
+            font-family: var(--font-serif);
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-main);
+            line-height: 1.25;
+        }
+
+        .email-modal-address {
+            font-size: 0.85rem;
+            color: var(--primary);
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        .email-modal-close {
+            width: 34px;
+            height: 34px;
+            border: none;
+            background: rgba(166,94,147,0.08);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
+
+        .email-modal-close:hover {
+            background: rgba(166,94,147,0.18);
+            color: var(--primary);
+            transform: rotate(90deg);
+        }
+
+        .email-modal-body {
+            padding: 1.25rem 1.5rem 1.5rem;
+        }
+
+        .email-modal-hint {
+            font-size: 0.88rem;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .email-options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .email-option-btn {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.85rem 1.1rem;
+            background: var(--white);
+            border: 1.5px solid rgba(166,94,147,0.15);
+            border-radius: 14px;
+            text-decoration: none;
+            color: var(--text-main);
+            transition: var(--transition);
+            cursor: pointer;
+            width: 100%;
+            text-align: left;
+            font-family: var(--font-sans);
+            position: relative;
+        }
+
+        [data-theme="calm"] .email-option-btn {
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(255,255,255,0.1);
+        }
+
+        .email-option-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            border-color: var(--primary);
+        }
+
+        .option-gmail .email-option-icon {
+            background: rgba(234, 67, 53, 0.1);
+            color: #EA4335;
+        }
+        .option-outlook .email-option-icon {
+            background: rgba(0, 120, 212, 0.1);
+            color: #0078D4;
+        }
+        .option-app .email-option-icon {
+            background: rgba(166, 94, 147, 0.1);
+            color: var(--primary);
+        }
+        .option-copy .email-option-icon {
+            background: rgba(162, 198, 165, 0.15);
+            color: #3B7E43;
+        }
+
+        .email-option-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .email-option-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .email-option-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .email-option-name {
+            font-weight: 600;
+            font-size: 0.92rem;
+            color: var(--text-main);
+        }
+
+        .email-option-sub {
+            font-size: 0.78rem;
+            color: var(--text-light);
+        }
+
+        .email-option-arrow {
+            width: 18px;
+            height: 18px;
+            color: var(--text-muted);
+            transition: var(--transition);
+        }
+
+        .email-option-btn:hover .email-option-arrow {
+            color: var(--primary);
+            transform: translateX(4px);
+        }
+
+        .copy-badge {
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: rgba(166,94,147,0.1);
+            color: var(--primary);
+            transition: var(--transition);
+        }
+
+        .copy-badge.copied {
+            background: #4A8B52;
+            color: white;
         }
 
         /* ══════════════════════════════════════════════════
@@ -3420,6 +3651,73 @@
         </div>
     </div>
 
+    <!-- ══════════════════════════════════════════════════
+         MODAL SELECCIÓN DE EMAIL
+         ══════════════════════════════════════════════════ -->
+    <div class="email-modal-overlay" id="emailModalOverlay" role="dialog" aria-modal="true" aria-labelledby="emailModalTitle" onclick="if(event.target===this) closeEmailModal()">
+        <div class="email-modal" id="emailModal">
+            <div class="email-modal-header">
+                <div>
+                    <span class="email-modal-label">Contacto por email</span>
+                    <h3 class="email-modal-title" id="emailModalTitle">¿Cómo querés enviar tu mensaje?</h3>
+                    <p class="email-modal-address">sanandoestamos@gmail.com</p>
+                </div>
+                <button class="email-modal-close" id="btnCloseEmailModal" onclick="closeEmailModal()" aria-label="Cerrar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="email-modal-body">
+                <p class="email-modal-hint">Elegí tu proveedor de correo para redactar directamente:</p>
+                
+                <div class="email-options-grid">
+                    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=sanandoestamos@gmail.com" target="_blank" rel="noopener noreferrer" class="email-option-btn option-gmail" onclick="closeEmailModal()">
+                        <div class="email-option-icon">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L12 9.573l8.073-6.08C21.691 2.279 24 3.434 24 5.457z"/></svg>
+                        </div>
+                        <div class="email-option-info">
+                            <span class="email-option-name">Gmail</span>
+                            <span class="email-option-sub">Abrir en Google Gmail web</span>
+                        </div>
+                        <svg class="email-option-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </a>
+
+                    <a href="https://outlook.live.com/mail/0/deeplink/compose?to=sanandoestamos@gmail.com" target="_blank" rel="noopener noreferrer" class="email-option-btn option-outlook" onclick="closeEmailModal()">
+                        <div class="email-option-icon">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7.88 12a4.12 4.12 0 1 1 8.24 0 4.12 4.12 0 0 1-8.24 0zM0 3.75A1.75 1.75 0 0 1 1.75 2h20.5C23.22 2 24 2.78 24 3.75v16.5c0 .97-.78 1.75-1.75 1.75H1.75A1.75 1.75 0 0 1 0 20.25V3.75z"/></svg>
+                        </div>
+                        <div class="email-option-info">
+                            <span class="email-option-name">Hotmail / Outlook</span>
+                            <span class="email-option-sub">Abrir en Microsoft Outlook web</span>
+                        </div>
+                        <svg class="email-option-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </a>
+
+                    <a href="mailto:sanandoestamos@gmail.com" class="email-option-btn option-app" onclick="closeEmailModal()">
+                        <div class="email-option-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                        </div>
+                        <div class="email-option-info">
+                            <span class="email-option-name">App de correo del dispositivo</span>
+                            <span class="email-option-sub">Apple Mail, Mail de Windows, etc.</span>
+                        </div>
+                        <svg class="email-option-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </a>
+
+                    <button type="button" class="email-option-btn option-copy" onclick="copyEmailToClipboard()">
+                        <div class="email-option-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="copyEmailIcon"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                        </div>
+                        <div class="email-option-info">
+                            <span class="email-option-name" id="copyEmailTitle">Copiar dirección de correo</span>
+                            <span class="email-option-sub" id="copyEmailSub">sanandoestamos@gmail.com</span>
+                        </div>
+                        <span class="copy-badge" id="copyBadge">Copiar</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 
 
@@ -3431,7 +3729,7 @@
             <p class="section-label">Contacto y Redes</p>
             <h2 class="section-title" style="font-size: 1.5rem;">Escribime o seguime para más contenido</h2>
             <div class="social-links" style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem;">
-                <a href="mailto:sanandoestamos@gmail.com" class="social-link">
+                <a href="mailto:sanandoestamos@gmail.com" class="social-link" onclick="openEmailModal(event)">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24" style="margin-right: 8px;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
                     Email
                 </a>
@@ -3496,7 +3794,7 @@
                 <div class="footer-links">
                     <h4>Contacto</h4>
                     <ul>
-                        <li><a href="mailto:sanandoestamos@gmail.com">sanandoestamos@gmail.com</a></li>
+                        <li><a href="mailto:sanandoestamos@gmail.com" onclick="openEmailModal(event)">sanandoestamos@gmail.com</a></li>
                         <li><a href="https://www.facebook.com/estamossanando" target="_blank" rel="noopener noreferrer">Facebook</a></li>
                         <li><a href="https://www.instagram.com/estamos_sanando/" target="_blank" rel="noopener noreferrer">Instagram</a></li>
                     </ul>
@@ -3523,6 +3821,48 @@
          JAVASCRIPT
          ══════════════════════════════════════════════════ -->
     <script>
+        /* ─── MODAL SELECCIÓN DE EMAIL (GMAIL, OUTLOOK, MAILTO, COPY) ─── */
+        function openEmailModal(e) {
+            if (e) e.preventDefault();
+            const modal = document.getElementById('emailModalOverlay');
+            if (modal) modal.classList.add('active');
+        }
+
+        function closeEmailModal() {
+            const modal = document.getElementById('emailModalOverlay');
+            if (modal) modal.classList.remove('active');
+        }
+
+        function copyEmailToClipboard() {
+            const email = 'sanandoestamos@gmail.com';
+            navigator.clipboard.writeText(email).then(function() {
+                const title = document.getElementById('copyEmailTitle');
+                const sub = document.getElementById('copyEmailSub');
+                const badge = document.getElementById('copyBadge');
+                
+                if (title) title.textContent = '¡Email copiado al portapapeles!';
+                if (sub) sub.textContent = '¡Listo para pegar!';
+                if (badge) {
+                    badge.textContent = '✓ Copiado';
+                    badge.classList.add('copied');
+                }
+
+                setTimeout(function() {
+                    if (title) title.textContent = 'Copiar dirección de correo';
+                    if (sub) sub.textContent = 'sanandoestamos@gmail.com';
+                    if (badge) {
+                        badge.textContent = 'Copiar';
+                        badge.classList.remove('copied');
+                    }
+                }, 3000);
+            }).catch(function(err) {
+                console.error('Error al copiar email:', err);
+            });
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeEmailModal();
+        });
 
         /* ══════════════════════════════════════════════════════════════
            CONFIGURACIÓN DE EPISODIOS
