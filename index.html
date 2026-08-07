@@ -741,6 +741,104 @@
         }
 
         /* ══════════════════════════════════════════════════
+           BOTÓN CRÉDITOS & DESPLEGABLE DE CRÉDITOS
+           ══════════════════════════════════════════════════ */
+        .creditos-container {
+            margin: 0.75rem auto 1.25rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .btn-creditos {
+            background: transparent;
+            border: 1px solid rgba(166, 94, 147, 0.4);
+            border-radius: 0 !important; /* Bordes cuadrados exactos */
+            color: var(--primary);
+            font-family: var(--font-sans);
+            font-size: 0.68rem;
+            font-weight: 600;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            padding: 4px 12px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            outline: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-creditos:hover,
+        .btn-creditos.active {
+            background: rgba(166, 94, 147, 0.1);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        [data-theme="calm"] .btn-creditos {
+            border-color: rgba(194, 122, 176, 0.4);
+            color: #E29BCB;
+        }
+
+        [data-theme="calm"] .btn-creditos:hover,
+        [data-theme="calm"] .btn-creditos.active {
+            background: rgba(194, 122, 176, 0.15);
+            border-color: #E29BCB;
+            color: #FAF3EB;
+        }
+
+        .creditos-content {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease, opacity 0.35s ease, margin-top 0.25s ease;
+            font-size: 0.78rem;
+            color: var(--text-light);
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .creditos-content.active {
+            max-height: 120px;
+            opacity: 1;
+            margin-top: 0.75rem;
+        }
+
+        .creditos-content p {
+            margin: 3px 0;
+        }
+
+        .creditos-content strong {
+            font-weight: 600;
+            color: var(--text-main);
+            letter-spacing: 0.04em;
+        }
+
+        [data-theme="calm"] .creditos-content strong {
+            color: #EAE0D5;
+        }
+
+        .credito-link {
+            color: var(--primary);
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            transition: var(--transition);
+            font-weight: 600;
+        }
+
+        [data-theme="calm"] .credito-link {
+            color: #E29BCB;
+        }
+
+        .credito-link:hover {
+            opacity: 0.8;
+            color: var(--secondary);
+        }
+
+        /* ══════════════════════════════════════════════════
            DECORATIVE FLOWER ELEMENTS (SVG)
            ══════════════════════════════════════════════════ */
         .deco-flower {
@@ -3593,6 +3691,17 @@
             <div class="podcast-main-header reveal">
                 <p class="section-label">Podcast</p>
                 <img src="assets/logo.png" alt="Estamos Sanando" class="podcast-main-logo" onerror="this.style.display='none'">
+                
+                <div class="creditos-container">
+                    <button type="button" class="btn-creditos" id="btnCreditos" onclick="toggleCreditos()" aria-expanded="false">
+                        CRÉDITOS
+                    </button>
+                    <div class="creditos-content" id="creditosContent">
+                        <p><strong>PRODUCCIÓN GENERAL:</strong> Antonella Costa</p>
+                        <p><strong>EDICIÓN Y POSTPRODUCCIÓN:</strong> <a href="https://ignaviz.netlify.app/" target="_blank" rel="noopener noreferrer" class="credito-link">Ignacio Sánchez</a></p>
+                    </div>
+                </div>
+
                 <p class="podcast-main-desc">
                     Cuando entendí que no podía controlar lo que iba a pasar, busqué la manera de sostenerme.
                     De acompañar sin perderme a mí. Este podcast nace ahí.
@@ -3973,6 +4082,23 @@
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') closeEmailModal();
         });
+
+        /* ─── DESPLEGABLE DE CRÉDITOS ─── */
+        function toggleCreditos() {
+            const btn = document.getElementById('btnCreditos');
+            const content = document.getElementById('creditosContent');
+            if (!btn || !content) return;
+            const isExpanded = content.classList.contains('active');
+            if (isExpanded) {
+                content.classList.remove('active');
+                btn.classList.remove('active');
+                btn.setAttribute('aria-expanded', 'false');
+            } else {
+                content.classList.add('active');
+                btn.classList.add('active');
+                btn.setAttribute('aria-expanded', 'true');
+            }
+        }
 
         /* ══════════════════════════════════════════════════════════════
            CONFIGURACIÓN DE EPISODIOS
