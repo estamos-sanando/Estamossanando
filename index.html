@@ -682,6 +682,50 @@
         }
 
         /* ══════════════════════════════════════════════════
+           TOAST NOTIFICATION (EMAIL COPIADO)
+           ══════════════════════════════════════════════════ */
+        .toast-notification {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(40px);
+            background: #282129;
+            color: #FAF3EB;
+            padding: 12px 22px;
+            border-radius: 50px;
+            font-size: 0.88rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 12px 35px rgba(0,0,0,0.35);
+            border: 1.5px solid rgba(166,94,147,0.4);
+            z-index: 99999;
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 0.38s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.35s ease;
+        }
+
+        .toast-notification.active {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .toast-icon {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #1DB954;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.75rem;
+            flex-shrink: 0;
+        }
+
+        /* ══════════════════════════════════════════════════
            DECORATIVE FLOWER ELEMENTS (SVG)
            ══════════════════════════════════════════════════ */
         .deco-flower {
@@ -3821,9 +3865,62 @@
          JAVASCRIPT
          ══════════════════════════════════════════════════ -->
     <script>
-        /* ─── MODAL SELECCIÓN DE EMAIL (GMAIL, OUTLOOK, MAILTO, COPY) ─── */
+        /* ─── TOAST NOTIFICATION & COPIAR EMAIL ─── */
+        function showToast(message) {
+            let toast = document.getElementById('toastNotification');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'toastNotification';
+                toast.className = 'toast-notification';
+                toast.innerHTML = '<span class="toast-icon">✓</span><span id="toastText"></span>';
+                document.body.appendChild(toast);
+            }
+            const textEl = document.getElementById('toastText');
+            if (textEl) textEl.textContent = message;
+            toast.classList.add('active');
+            
+            if (window.toastTimeout) clearTimeout(window.toastTimeout);
+            window.toastTimeout = setTimeout(function() {
+                toast.classList.remove('active');
+            }, 3500);
+        }
+
+        function copyEmailDirectly(e) {
+            if (e && e.preventDefault) e.preventDefault();
+            const email = 'sanandoestamos@gmail.com';
+
+            function fallbackCopy(text) {
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                textArea.style.position = 'fixed';
+                textArea.style.opacity = '0';
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    showToast('¡Email copiado! sanandoestamos@gmail.com 🤍');
+                } catch (err) {
+                    showToast('sanandoestamos@gmail.com');
+                }
+                document.body.removeChild(textArea);
+            }
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(email).then(function() {
+                    showToast('¡Email copiado! sanandoestamos@gmail.com 🤍');
+                }).catch(function() {
+                    fallbackCopy(email);
+                });
+            } else {
+                fallbackCopy(email);
+            }
+        }
+
+        /* ─── MODAL SELECCIÓN DE EMAIL ─── */
         function openEmailModal(e) {
-            if (e) e.preventDefault();
+            if (e && e.preventDefault) e.preventDefault();
+            copyEmailDirectly(null);
             const modal = document.getElementById('emailModalOverlay');
             if (modal) modal.classList.add('active');
         }
@@ -3834,30 +3931,26 @@
         }
 
         function copyEmailToClipboard() {
-            const email = 'sanandoestamos@gmail.com';
-            navigator.clipboard.writeText(email).then(function() {
-                const title = document.getElementById('copyEmailTitle');
-                const sub = document.getElementById('copyEmailSub');
-                const badge = document.getElementById('copyBadge');
-                
-                if (title) title.textContent = '¡Email copiado al portapapeles!';
-                if (sub) sub.textContent = '¡Listo para pegar!';
-                if (badge) {
-                    badge.textContent = '✓ Copiado';
-                    badge.classList.add('copied');
-                }
+            copyEmailDirectly(null);
+            const title = document.getElementById('copyEmailTitle');
+            const sub = document.getElementById('copyEmailSub');
+            const badge = document.getElementById('copyBadge');
+            
+            if (title) title.textContent = '¡Email copiado al portapapeles!';
+            if (sub) sub.textContent = '¡Listo para pegar!';
+            if (badge) {
+                badge.textContent = '✓ Copiado';
+                badge.classList.add('copied');
+            }
 
-                setTimeout(function() {
-                    if (title) title.textContent = 'Copiar dirección de correo';
-                    if (sub) sub.textContent = 'sanandoestamos@gmail.com';
-                    if (badge) {
-                        badge.textContent = 'Copiar';
-                        badge.classList.remove('copied');
-                    }
-                }, 3000);
-            }).catch(function(err) {
-                console.error('Error al copiar email:', err);
-            });
+            setTimeout(function() {
+                if (title) title.textContent = 'Copiar dirección de correo';
+                if (sub) sub.textContent = 'sanandoestamos@gmail.com';
+                if (badge) {
+                    badge.textContent = 'Copiar';
+                    badge.classList.remove('copied');
+                }
+            }, 3000);
         }
 
         document.addEventListener('keydown', function(e) {
