@@ -189,14 +189,14 @@
 
         /* Recurso card en sobre mí */
         .recurso-card {
-            margin-top: 2rem;
+            margin-top: 1.2rem;
             background: linear-gradient(135deg, rgba(166,94,147,0.06) 0%, rgba(162,198,165,0.08) 100%);
             border: 1.5px solid rgba(166,94,147,0.18);
             border-radius: 18px;
-            padding: 1.4rem 1.6rem;
+            padding: 1.1rem 1.3rem;
             display: flex;
             align-items: center;
-            gap: 1.2rem;
+            gap: 1.1rem;
             position: relative;
             overflow: hidden;
         }
@@ -1013,13 +1013,18 @@
 
         .about-grid {
             display: grid;
-            grid-template-columns: 1fr 1.2fr;
-            gap: 4rem;
+            grid-template-columns: minmax(260px, 320px) 1fr;
+            gap: 2.25rem;
             align-items: center;
+            max-width: 1000px;
+            margin: 0 auto;
         }
 
         .about-image-container {
             position: relative;
+            width: 100%;
+            max-width: 320px;
+            margin: 0 auto;
         }
 
         .about-image-frame {
@@ -1029,6 +1034,7 @@
             box-shadow: var(--shadow-medium);
             background: linear-gradient(135deg, var(--secondary), var(--complementary));
             aspect-ratio: 4/5;
+            max-height: 420px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1116,13 +1122,13 @@
         }
 
         .about-text h2 {
-            margin-bottom: 1.5rem;
+            margin-bottom: 0.85rem;
         }
 
         .about-text p {
-            margin-bottom: 1.2rem;
+            margin-bottom: 0.75rem;
             font-size: 0.95rem;
-            line-height: 1.85;
+            line-height: 1.75;
             color: var(--text-light);
         }
 
