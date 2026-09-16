@@ -4101,29 +4101,29 @@
         }
 
         /* ══════════════════════════════════════════════════════════════
-           CONFIGURACIÓN DE EPISODIOS
+           CONFIGURACIÓN DE SPOTIFY & EPISODIOS
            ─────────────────────────────────────────────────────────────
-           Para activar un episodio cuando lo publiques en Spotify:
-           1. Cambiá su `spotifyUrl` de null al link del episodio.
-              Ej: spotifyUrl: 'https://open.spotify.com/episode/TU_ID'
-           2. El badge cambia automáticamente a "En Spotify".
-           También podés poner el link al show cuando esté listo:
-              const SPOTIFY_SHOW_URL = 'https://open.spotify.com/show/TU_SHOW_ID';
+           La web se sincroniza automáticamente con tu RSS Feed de Anchor/Spotify:
+           RSS: https://anchor.fm/s/11729099c/podcast/rss
+
+           Cada vez que publiques un episodio nuevo en Spotify for Podcasters,
+           la web lo detectará e identificará automáticamente.
            ══════════════════════════════════════════════════════════════ */
-        const SPOTIFY_SHOW_URL = null; // Poner URL del show cuando esté en Spotify
+        const SPOTIFY_SHOW_URL = 'https://podcasters.spotify.com/pod/show/antonella-costa7';
+        const SPOTIFY_RSS_URL = 'https://anchor.fm/s/11729099c/podcast/rss';
 
         const EPISODIOS = [
             {
                 num: '01',
                 title: 'El diagnóstico',
                 desc: 'El momento en que todo cambia. Cómo fue recibir la noticia y aprender a estar.',
-                spotifyUrl: null
+                spotifyUrl: 'https://podcasters.spotify.com/pod/show/antonella-costa7/episodes/EL-DIAGNSTICO-e3oo5ne'
             },
             {
                 num: '02',
                 title: 'Aprender a distribuir el peso',
                 desc: 'No hay una sola persona que pueda con todo. Cómo repartir sin culpa.',
-                spotifyUrl: null
+                spotifyUrl: 'https://podcasters.spotify.com/pod/show/antonella-costa7/episodes/APRENDER-A-DISTRIBUIR-EL-PESO-e3oo5tt'
             },
             {
                 num: '03',
@@ -4204,6 +4204,55 @@
 
             // Re-observar para animaciones reveal
             document.querySelectorAll('.ep-card.reveal').forEach(el => revealObserver && revealObserver.observe(el));
+        }
+
+        /* ─── SINCRONIZACIÓN AUTOMÁTICA DESDE SPOTIFY / ANCHOR RSS ─── */
+        async function loadSpotifyEpisodesFromRSS() {
+            if (!SPOTIFY_RSS_URL) return;
+            try {
+                const apiUrl = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(SPOTIFY_RSS_URL);
+                const response = await fetch(apiUrl);
+                if (!response.ok) return;
+                const data = await response.json();
+
+                if (data && data.status === 'ok' && Array.isArray(data.items)) {
+                    if (data.feed && data.feed.link) {
+                        const btn = document.getElementById('spotifyFollowBtn');
+                        if (btn) btn.href = data.feed.link;
+                    }
+
+                    const normalizeTitle = (str) => (str || '')
+                        .toLowerCase()
+                        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                        .replace(/[^a-z0-9]/g, "");
+
+                    let updated = false;
+
+                    data.items.forEach((item) => {
+                        const rssTitleNorm = normalizeTitle(item.title);
+                        const rssLink = item.link || (item.enclosure && item.enclosure.link);
+                        if (!rssLink) return;
+
+                        const epMatch = EPISODIOS.find((ep) => {
+                            const epTitleNorm = normalizeTitle(ep.title);
+                            return rssTitleNorm.includes(epTitleNorm) || epTitleNorm.includes(rssTitleNorm);
+                        });
+
+                        if (epMatch) {
+                            if (epMatch.spotifyUrl !== rssLink) {
+                                epMatch.spotifyUrl = rssLink;
+                                updated = true;
+                            }
+                        }
+                    });
+
+                    if (updated) {
+                        renderEpisodios();
+                    }
+                }
+            } catch (e) {
+                console.log('Sync RSS Spotify:', e);
+            }
         }
 
         // ─── (Margarita interactiva simplificada a un modal estático/flotante) ───
@@ -4309,6 +4358,7 @@
 
         // ─── INICIALIZAR EPISODIOS ───
         renderEpisodios();
+        loadSpotifyEpisodesFromRSS();
 
         // ── SMOOTH SCROLL FOR NAV LINKS ──
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
