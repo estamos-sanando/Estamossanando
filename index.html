@@ -3205,52 +3205,265 @@
             border-radius: 2px;
         }
 
-        /* Floating Mini Player */
-        .floating-player {
+        /* Floating Mini Player Bar */
+        .floating-player-bar {
             position: fixed;
-            bottom: -100px;
+            bottom: -120px;
             left: 50%;
             transform: translateX(-50%);
-            background: var(--white);
-            padding: 12px 24px;
-            border-radius: 50px;
-            box-shadow: var(--shadow-medium);
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            z-index: 1000;
-            transition: bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid var(--secondary);
+            width: calc(100% - 32px);
+            max-width: 820px;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(162, 89, 143, 0.25);
+            border-radius: 24px;
+            box-shadow: 0 16px 40px rgba(74, 59, 70, 0.2), 0 4px 12px rgba(0, 0, 0, 0.06);
+            padding: 12px 20px;
+            z-index: 9999;
             opacity: 0;
             pointer-events: none;
+            transition: bottom 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
         }
-        .floating-player.visible {
-            bottom: 24px;
+        .floating-player-bar.visible {
+            bottom: 20px;
             opacity: 1;
             pointer-events: auto;
         }
-        .floating-player-title {
+        .fp-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+        .fp-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 160px;
+            max-width: 220px;
+        }
+        .fp-num {
+            background: linear-gradient(135deg, var(--primary), #8E4D7D);
+            color: var(--white);
             font-family: var(--font-serif);
-            font-size: 0.9rem;
-            font-weight: 600;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 12px;
+            white-space: nowrap;
+            letter-spacing: 0.5px;
+        }
+        .fp-text {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .fp-title {
+            font-family: var(--font-serif);
+            font-size: 0.88rem;
+            font-weight: 700;
             color: var(--text-main);
             white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-        .floating-player-btn {
-            background: var(--primary);
-            color: var(--white);
+        .fp-status {
+            font-size: 0.72rem;
+            color: var(--primary);
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Controls */
+        .fp-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .fp-btn {
+            background: transparent;
             border: none;
-            width: 36px;
-            height: 36px;
+            color: var(--text-main);
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: var(--transition);
+            transition: all 0.2s ease;
         }
-        .floating-player-btn:hover { background: #8E4D7D; transform: scale(1.05); }
-        .floating-player-btn svg { width: 16px; height: 16px; }
+        .fp-btn:hover {
+            background: rgba(162, 89, 143, 0.1);
+            color: var(--primary);
+            transform: scale(1.08);
+        }
+        .fp-btn svg { width: 16px; height: 16px; }
+
+        .fp-btn-play {
+            background: linear-gradient(135deg, var(--primary), #8E4D7D);
+            color: var(--white);
+            width: 42px;
+            height: 42px;
+            box-shadow: 0 4px 12px rgba(162, 89, 143, 0.35);
+        }
+        .fp-btn-play:hover {
+            background: linear-gradient(135deg, #8E4D7D, #6B365D);
+            color: var(--white);
+            transform: scale(1.06);
+            box-shadow: 0 6px 16px rgba(162, 89, 143, 0.45);
+        }
+        .fp-btn-play svg { width: 20px; height: 20px; }
+
+        /* Progress Bar & Time */
+        .fp-progress-wrap {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            max-width: 300px;
+        }
+        .fp-time {
+            font-size: 0.75rem;
+            font-family: monospace;
+            color: var(--text-light);
+            min-width: 38px;
+            text-align: center;
+        }
+        .fp-progress-bar {
+            flex: 1;
+            height: 6px;
+            background: rgba(162, 89, 143, 0.15);
+            border-radius: 3px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: height 0.2s ease;
+        }
+        .fp-progress-bar:hover {
+            height: 8px;
+        }
+        .fp-progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 3px;
+            transition: width 0.1s linear;
+        }
+
+        /* Actions */
+        .fp-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .fp-spotify-link {
+            color: #1DB954;
+            padding: 6px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        .fp-spotify-link:hover {
+            background: rgba(29, 185, 84, 0.12);
+            transform: scale(1.15);
+        }
+        .fp-spotify-link svg { width: 20px; height: 20px; }
+
+        .fp-close-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-light);
+            font-size: 1.4rem;
+            line-height: 1;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        .fp-close-btn:hover {
+            background: rgba(0, 0, 0, 0.06);
+            color: var(--text-main);
+        }
+
+        /* Episode Card Play Row */
+        .ep-actions-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-top: auto;
+            padding-top: 10px;
+        }
+        .btn-ep-play {
+            background: linear-gradient(135deg, var(--primary), #8E4D7D);
+            color: var(--white);
+            border: none;
+            padding: 7px 14px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 3px 10px rgba(162, 89, 143, 0.25);
+        }
+        .btn-ep-play:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(162, 89, 143, 0.4);
+        }
+        .btn-ep-play.active {
+            background: linear-gradient(135deg, #1DB954, #159441);
+            box-shadow: 0 4px 12px rgba(29, 185, 84, 0.35);
+        }
+        .btn-ep-play svg { width: 14px; height: 14px; }
+
+        .btn-ep-spotify {
+            background: rgba(29, 185, 84, 0.1);
+            color: #1DB954;
+            border: 1px solid rgba(29, 185, 84, 0.3);
+            padding: 6px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        .btn-ep-spotify:hover {
+            background: #1DB954;
+            color: #fff;
+            transform: scale(1.12);
+        }
+        .btn-ep-spotify svg { width: 16px; height: 16px; }
+
+        @media (max-width: 768px) {
+            .floating-player-bar {
+                padding: 10px 14px;
+                border-radius: 18px;
+                bottom: -140px;
+            }
+            .floating-player-bar.visible {
+                bottom: 12px;
+            }
+            .fp-info { min-width: 110px; max-width: 140px; }
+            .fp-progress-wrap { max-width: 140px; }
+            .fp-time { font-size: 0.7rem; min-width: 32px; }
+        }
+        @media (max-width: 480px) {
+            .fp-progress-wrap { display: none; }
+            .fp-info { max-width: 150px; }
+        }
 
         /* Hug Button */
         .hug-btn {
@@ -3985,7 +4198,51 @@
         </div>
     </footer>
 
+    <!-- ══════════════════════════════════════════════════
+         REPRODUCTOR DE AUDIO FLOTANTE (VENTANA EMERGENTE)
+         ══════════════════════════════════════════════════ -->
+    <div class="floating-player-bar" id="floatingPlayer" aria-label="Reproductor flotante de episodios">
+        <audio id="mainAudioPlayer" preload="metadata"></audio>
+        <div class="fp-content">
+            <div class="fp-info">
+                <span class="fp-num" id="fpEpNum">Ep. 01</span>
+                <div class="fp-text">
+                    <span class="fp-title" id="fpEpTitle">Selecciona un episodio</span>
+                    <span class="fp-status" id="fpEpStatus">Listo para reproducir</span>
+                </div>
+            </div>
 
+            <div class="fp-controls">
+                <button type="button" class="fp-btn fp-btn-prev" id="fpPrevBtn" title="Episodio anterior" aria-label="Episodio anterior">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+                </button>
+                <button type="button" class="fp-btn fp-btn-play" id="fpPlayBtn" title="Reproducir o Pausar" aria-label="Reproducir o Pausar">
+                    <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                    <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                </button>
+                <button type="button" class="fp-btn fp-btn-next" id="fpNextBtn" title="Episodio siguiente" aria-label="Episodio siguiente">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+                </button>
+            </div>
+
+            <div class="fp-progress-wrap">
+                <span class="fp-time" id="fpCurrentTime">00:00</span>
+                <div class="fp-progress-bar" id="fpProgressBar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    <div class="fp-progress-fill" id="fpProgressFill"></div>
+                </div>
+                <span class="fp-time" id="fpDuration">00:00</span>
+            </div>
+
+            <div class="fp-actions">
+                <a href="#" target="_blank" rel="noopener noreferrer" class="fp-spotify-link" id="fpSpotifyLink" title="Escuchar en Spotify" aria-label="Escuchar en Spotify">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+                </a>
+                <button type="button" class="fp-close-btn" id="fpCloseBtn" title="Cerrar reproductor" aria-label="Cerrar reproductor">
+                    &times;
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- ══════════════════════════════════════════════════
          JAVASCRIPT
@@ -4105,9 +4362,6 @@
            ─────────────────────────────────────────────────────────────
            La web se sincroniza automáticamente con tu RSS Feed de Anchor/Spotify:
            RSS: https://anchor.fm/s/11729099c/podcast/rss
-
-           Cada vez que publiques un episodio nuevo en Spotify for Podcasters,
-           la web lo detectará e identificará automáticamente.
            ══════════════════════════════════════════════════════════════ */
         const SPOTIFY_SHOW_URL = 'https://podcasters.spotify.com/pod/show/antonella-costa7';
         const SPOTIFY_RSS_URL = 'https://anchor.fm/s/11729099c/podcast/rss';
@@ -4117,51 +4371,278 @@
                 num: '01',
                 title: 'El diagnóstico',
                 desc: 'El momento en que todo cambia. Cómo fue recibir la noticia y aprender a estar.',
-                spotifyUrl: 'https://podcasters.spotify.com/pod/show/antonella-costa7/episodes/EL-DIAGNSTICO-e3oo5ne'
+                spotifyUrl: 'https://podcasters.spotify.com/pod/show/antonella-costa7/episodes/EL-DIAGNSTICO-e3oo5ne',
+                audioUrl: 'https://anchor.fm/s/11729099c/podcast/play/125621422/https://d3ctxlq1ktw2nl.cloudfront.net/staging/2026-8-12/482edfe7-8e57-cf2a-1178-1ffba06589c4.mp3'
             },
             {
                 num: '02',
                 title: 'Aprender a distribuir el peso',
                 desc: 'No hay una sola persona que pueda con todo. Cómo repartir sin culpa.',
-                spotifyUrl: 'https://podcasters.spotify.com/pod/show/antonella-costa7/episodes/APRENDER-A-DISTRIBUIR-EL-PESO-e3oo5tt'
+                spotifyUrl: 'https://podcasters.spotify.com/pod/show/antonella-costa7/episodes/APRENDER-A-DISTRIBUIR-EL-PESO-e3oo5tt',
+                audioUrl: 'https://anchor.fm/s/11729099c/podcast/play/125621629/https://d3ctxlq1ktw2nl.cloudfront.net/staging/2026-8-12/72646bb6-88cb-f824-1106-2e3d4acde1a0.mp3'
             },
             {
                 num: '03',
                 title: 'Yo no soy superwoman',
                 desc: 'El agotamiento invisible del que acompaña. Permiso para no poder.',
-                spotifyUrl: null
+                spotifyUrl: null,
+                audioUrl: null
             },
             {
                 num: '04',
                 title: 'Se llama cáncer',
                 desc: 'Nombrar lo que pasa. Por qué es tan difícil decir la palabra.',
-                spotifyUrl: null
+                spotifyUrl: null,
+                audioUrl: null
             },
             {
                 num: '05',
                 title: 'Sentirse sola',
                 desc: 'La soledad que nadie ve. Estar rodeada de gente y aún así no tener con quién.',
-                spotifyUrl: null
+                spotifyUrl: null,
+                audioUrl: null
             },
             {
                 num: '06',
                 title: 'Aceptar no es rendirse',
                 desc: 'La diferencia entre resignarse y encontrar un lugar donde pararse.',
-                spotifyUrl: null
+                spotifyUrl: null,
+                audioUrl: null
             },
             {
                 num: '07',
                 title: 'La burocracia de la enfermedad',
                 desc: 'Turnos, papeles, esperas. Lo que nadie te cuenta del sistema de salud.',
-                spotifyUrl: null
+                spotifyUrl: null,
+                audioUrl: null
             },
             {
                 num: '08',
                 title: 'Preámbulo del adiós',
                 desc: 'Cuando empezás a intuir que el tiempo se acorta. Cómo estar ahí.',
-                spotifyUrl: null
+                spotifyUrl: null,
+                audioUrl: null
             }
         ];
+
+        /* ─── REPRODUCTOR DE AUDIO FLOTANTE & PERSISTENCIA ─── */
+        let currentEpIndex = -1;
+        let globalAudio = null;
+
+        const LS_EP_KEY = 'estamos_sanando_last_ep_index';
+        const LS_TIME_KEY = 'estamos_sanando_last_ep_time';
+
+        function initFloatingPlayer() {
+            globalAudio = document.getElementById('mainAudioPlayer');
+            if (!globalAudio) return;
+
+            const playBtn = document.getElementById('fpPlayBtn');
+            const prevBtn = document.getElementById('fpPrevBtn');
+            const nextBtn = document.getElementById('fpNextBtn');
+            const progressBar = document.getElementById('fpProgressBar');
+            const closeBtn = document.getElementById('fpCloseBtn');
+
+            if (playBtn) playBtn.addEventListener('click', togglePlayPause);
+            if (prevBtn) prevBtn.addEventListener('click', playPrevEpisode);
+            if (nextBtn) nextBtn.addEventListener('click', playNextEpisode);
+
+            if (progressBar) {
+                progressBar.addEventListener('click', (e) => {
+                    if (!globalAudio || !globalAudio.duration) return;
+                    const rect = progressBar.getBoundingClientRect();
+                    const clickX = e.clientX - rect.left;
+                    const pct = Math.max(0, Math.min(1, clickX / rect.width));
+                    globalAudio.currentTime = pct * globalAudio.duration;
+                    savePlaybackState();
+                });
+            }
+
+            if (closeBtn) {
+                closeBtn.addEventListener('click', () => {
+                    const bar = document.getElementById('floatingPlayer');
+                    if (bar) bar.classList.remove('visible');
+                    if (globalAudio && !globalAudio.paused) {
+                        globalAudio.pause();
+                    }
+                });
+            }
+
+            globalAudio.addEventListener('timeupdate', updateProgress);
+            globalAudio.addEventListener('ended', onAudioEnded);
+            globalAudio.addEventListener('play', () => updatePlayPauseUI(true));
+            globalAudio.addEventListener('pause', () => updatePlayPauseUI(false));
+
+            restorePlaybackState();
+        }
+
+        function formatTime(seconds) {
+            if (isNaN(seconds) || seconds < 0) return '00:00';
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return (mins < 10 ? '0' : '') + mins + ':' + (secs < 10 ? '0' : '') + secs;
+        }
+
+        function updateProgress() {
+            if (!globalAudio) return;
+            const curTime = globalAudio.currentTime || 0;
+            const duration = globalAudio.duration || 0;
+
+            const curEl = document.getElementById('fpCurrentTime');
+            const durEl = document.getElementById('fpDuration');
+            const fillEl = document.getElementById('fpProgressFill');
+
+            if (curEl) curEl.textContent = formatTime(curTime);
+            if (durEl && duration) durEl.textContent = formatTime(duration);
+            if (fillEl && duration) {
+                const pct = (curTime / duration) * 100;
+                fillEl.style.width = pct + '%';
+            }
+
+            if (Math.floor(curTime) % 2 === 0) {
+                savePlaybackState();
+            }
+        }
+
+        function savePlaybackState() {
+            if (currentEpIndex < 0 || !globalAudio) return;
+            try {
+                localStorage.setItem(LS_EP_KEY, currentEpIndex);
+                localStorage.setItem(LS_TIME_KEY, Math.floor(globalAudio.currentTime || 0));
+            } catch(e) {}
+        }
+
+        function restorePlaybackState() {
+            try {
+                const savedIndex = localStorage.getItem(LS_EP_KEY);
+                const savedTime = parseFloat(localStorage.getItem(LS_TIME_KEY) || '0');
+
+                if (savedIndex !== null && EPISODIOS[parseInt(savedIndex)]) {
+                    const idx = parseInt(savedIndex);
+                    const ep = EPISODIOS[idx];
+                    if (ep && (ep.audioUrl || ep.spotifyUrl)) {
+                        loadEpisode(idx, false);
+                        if (savedTime > 0 && globalAudio) {
+                            globalAudio.currentTime = savedTime;
+                            const statusEl = document.getElementById('fpEpStatus');
+                            if (statusEl) statusEl.textContent = 'Pausado en ' + formatTime(savedTime);
+                        }
+                    }
+                }
+            } catch(e) {}
+        }
+
+        function loadEpisode(index, autoPlay = true) {
+            const ep = EPISODIOS[index];
+            if (!ep) return;
+
+            currentEpIndex = index;
+
+            const bar = document.getElementById('floatingPlayer');
+            const numEl = document.getElementById('fpEpNum');
+            const titleEl = document.getElementById('fpEpTitle');
+            const statusEl = document.getElementById('fpEpStatus');
+            const spotifyLink = document.getElementById('fpSpotifyLink');
+
+            if (numEl) numEl.textContent = 'Ep. ' + ep.num;
+            if (titleEl) titleEl.textContent = ep.title;
+            if (statusEl) statusEl.textContent = 'Escuchando en la web';
+            if (spotifyLink) {
+                if (ep.spotifyUrl) {
+                    spotifyLink.href = ep.spotifyUrl;
+                    spotifyLink.style.display = 'inline-flex';
+                } else {
+                    spotifyLink.style.display = 'none';
+                }
+            }
+
+            if (ep.audioUrl && globalAudio) {
+                if (globalAudio.src !== ep.audioUrl) {
+                    globalAudio.src = ep.audioUrl;
+                }
+                if (autoPlay) {
+                    globalAudio.play().then(() => {
+                        updatePlayPauseUI(true);
+                    }).catch(err => {
+                        console.log('Autoplay:', err);
+                    });
+                }
+            } else if (ep.spotifyUrl && autoPlay) {
+                window.open(ep.spotifyUrl, '_blank', 'noopener');
+                return;
+            }
+
+            if (bar) bar.classList.add('visible');
+            renderEpisodios();
+        }
+
+        function playEpisode(index, e) {
+            if (e) e.stopPropagation();
+            if (currentEpIndex === index && globalAudio && !globalAudio.paused) {
+                globalAudio.pause();
+            } else {
+                loadEpisode(index, true);
+            }
+        }
+
+        function togglePlayPause() {
+            if (!globalAudio) return;
+            if (currentEpIndex < 0 && EPISODIOS.length > 0) {
+                const firstAvail = EPISODIOS.findIndex(e => e.audioUrl || e.spotifyUrl);
+                if (firstAvail >= 0) {
+                    loadEpisode(firstAvail, true);
+                    return;
+                }
+            }
+            if (globalAudio.paused) {
+                globalAudio.play();
+            } else {
+                globalAudio.pause();
+            }
+        }
+
+        function updatePlayPauseUI(isPlaying) {
+            const playIcon = document.querySelector('#fpPlayBtn .icon-play');
+            const pauseIcon = document.querySelector('#fpPlayBtn .icon-pause');
+            const statusEl = document.getElementById('fpEpStatus');
+
+            if (playIcon && pauseIcon) {
+                if (isPlaying) {
+                    playIcon.style.display = 'none';
+                    pauseIcon.style.display = 'inline-block';
+                    if (statusEl) statusEl.textContent = 'Reproduciendo audio';
+                } else {
+                    playIcon.style.display = 'inline-block';
+                    pauseIcon.style.display = 'none';
+                    if (statusEl) statusEl.textContent = 'Pausado';
+                }
+            }
+            renderEpisodios();
+        }
+
+        function playNextEpisode() {
+            if (currentEpIndex < 0) return;
+            for (let i = currentEpIndex + 1; i < EPISODIOS.length; i++) {
+                if (EPISODIOS[i].audioUrl || EPISODIOS[i].spotifyUrl) {
+                    loadEpisode(i, true);
+                    break;
+                }
+            }
+        }
+
+        function playPrevEpisode() {
+            if (currentEpIndex <= 0) return;
+            for (let i = currentEpIndex - 1; i >= 0; i--) {
+                if (EPISODIOS[i].audioUrl || EPISODIOS[i].spotifyUrl) {
+                    loadEpisode(i, true);
+                    break;
+                }
+            }
+        }
+
+        function onAudioEnded() {
+            updatePlayPauseUI(false);
+            playNextEpisode();
+        }
 
         /* ─── GENERAR GRID DE EPISODIOS ─── */
         function renderEpisodios() {
@@ -4169,40 +4650,53 @@
             if (!grid) return;
             grid.innerHTML = '';
 
-            // Actualizar botón de Spotify
             if (SPOTIFY_SHOW_URL) {
                 const btn = document.getElementById('spotifyFollowBtn');
                 if (btn) btn.href = SPOTIFY_SHOW_URL;
             }
 
-            EPISODIOS.forEach((ep) => {
-                const disponible = !!ep.spotifyUrl;
-                const card = document.createElement('div');
-                card.className = 'ep-card reveal ' + (disponible ? 'disponible' : 'proximamente');
+            EPISODIOS.forEach((ep, index) => {
+                const disponible = !!ep.spotifyUrl || !!ep.audioUrl;
+                const isPlayingThis = (currentEpIndex === index && globalAudio && !globalAudio.paused);
+                const isCurrentEp = (currentEpIndex === index);
 
-                if (disponible) {
-                    card.setAttribute('role', 'link');
-                    card.setAttribute('tabindex', '0');
-                    card.setAttribute('aria-label', 'Escuchar ' + ep.title + ' en Spotify');
-                    card.addEventListener('click', () => window.open(ep.spotifyUrl, '_blank', 'noopener'));
-                    card.addEventListener('keydown', (e) => {
-                        if (e.key === 'Enter' || e.key === ' ') window.open(ep.spotifyUrl, '_blank', 'noopener');
-                    });
-                }
+                const card = document.createElement('div');
+                card.className = 'ep-card reveal ' + (disponible ? 'disponible' : 'proximamente') + (isPlayingThis ? ' now-playing' : '');
 
                 card.innerHTML = `
                     <span class="ep-num">Ep. ${ep.num}</span>
                     <p class="ep-title">${ep.title}</p>
-                    <div class="ep-badge ${disponible ? 'badge-spotify' : 'badge-pronto'}">
+                    <p style="font-size: 0.82rem; color: var(--text-light); margin-top: 6px; margin-bottom: 12px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${ep.desc || ''}</p>
+                    
+                    <div class="ep-actions-row">
                         ${disponible
-                            ? `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg> En Spotify`
-                            : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Próximamente`
+                            ? `<button type="button" class="btn-ep-play ${isPlayingThis ? 'active' : ''}" onclick="playEpisode(${index}, event)">
+                                 ${isPlayingThis
+                                    ? `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg> Pausar` 
+                                    : (isCurrentEp ? `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> Reanudar`
+                                                   : `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> Escuchar`)}
+                               </button>
+                               ${ep.spotifyUrl ? `
+                               <a href="${ep.spotifyUrl}" target="_blank" rel="noopener noreferrer" class="btn-ep-spotify" title="Abrir en Spotify" onclick="event.stopPropagation();" aria-label="Abrir en Spotify">
+                                   <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+                               </a>` : ''}`
+                            : `<div class="ep-badge badge-pronto">
+                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Próximamente
+                               </div>`
                         }
                     </div>`;
+
+                if (disponible) {
+                    card.style.cursor = 'pointer';
+                    card.addEventListener('click', (e) => {
+                        if (e.target.closest('a') || e.target.closest('button')) return;
+                        playEpisode(index, e);
+                    });
+                }
+
                 grid.appendChild(card);
             });
 
-            // Re-observar para animaciones reveal
             document.querySelectorAll('.ep-card.reveal').forEach(el => revealObserver && revealObserver.observe(el));
         }
 
@@ -4230,8 +4724,8 @@
 
                     data.items.forEach((item) => {
                         const rssTitleNorm = normalizeTitle(item.title);
-                        const rssLink = item.link || (item.enclosure && item.enclosure.link);
-                        if (!rssLink) return;
+                        const rssLink = item.link;
+                        const audioLink = item.enclosure && item.enclosure.link;
 
                         const epMatch = EPISODIOS.find((ep) => {
                             const epTitleNorm = normalizeTitle(ep.title);
@@ -4239,9 +4733,20 @@
                         });
 
                         if (epMatch) {
-                            if (epMatch.spotifyUrl !== rssLink) {
+                            if (rssLink && epMatch.spotifyUrl !== rssLink) {
                                 epMatch.spotifyUrl = rssLink;
                                 updated = true;
+                            }
+                            if (audioLink && epMatch.audioUrl !== audioLink) {
+                                epMatch.audioUrl = audioLink;
+                                updated = true;
+                            }
+                            if (item.description) {
+                                const cleanDesc = item.description.replace(/<[^>]*>/g, '').trim();
+                                if (cleanDesc && cleanDesc.length > 10 && epMatch.desc !== cleanDesc) {
+                                    epMatch.desc = cleanDesc;
+                                    updated = true;
+                                }
                             }
                         }
                     });
@@ -4356,7 +4861,8 @@
 
         revealElements.forEach(el => revealObserver.observe(el));
 
-        // ─── INICIALIZAR EPISODIOS ───
+        // ─── INICIALIZAR REPRODUCTOR & EPISODIOS ───
+        initFloatingPlayer();
         renderEpisodios();
         loadSpotifyEpisodesFromRSS();
 
